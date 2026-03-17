@@ -1,0 +1,24 @@
+#!/bin/bash
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export PYTHONPATH="$PROJECT_ROOT:$PYTHONPATH"
+
+if [ -d "$PROJECT_ROOT/venv" ]; then
+    source "$PROJECT_ROOT/venv/bin/activate"
+fi
+
+# Support both source (.py) and Cython-compiled (.so) sentinel
+if [ -f "$PROJECT_ROOT/sentinel/main.py" ]; then
+    python3 -c "
+import sys
+sys.argv = sys.argv
+from sentinel.main import cli
+sys.exit(cli())
+" "$@"
+else
+    DOTENV_PATH="$PROJECT_ROOT/.env" python3 -c "
+import os, sys
+os.chdir('$PROJECT_ROOT')
+from sentinel.main import cli
+sys.exit(cli())
+" "$@"
+fi
