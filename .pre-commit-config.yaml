@@ -1,0 +1,27 @@
+# =================================================================
+# Sentinel Core — Pre-commit Security Gate
+# Blocks the commit if critical vulnerabilities are detected.
+# =================================================================
+# Installation:
+#   1. pip install pre-commit
+#   2. pre-commit install
+#   Or automatically: sentinel init
+# =================================================================
+
+repos:
+  - repo: local
+    hooks:
+      - id: sentinel-scan
+        name: "🛡️ Sentinel Security Gate"
+        entry: sentinel scan .
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+        verbose: true
+
+# To generate an HTML report on every commit (optional, slower):
+# change entry to: sentinel scan . --report
+#
+# For full AI-analysis via Auditor Core (slower, recommended for PR):
+# change entry to: sentinel scan . --audit --report

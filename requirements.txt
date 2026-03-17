@@ -1,0 +1,26 @@
+# Sentinel Core — Production Dependencies
+# Pinned for stability
+
+# --- CLI & Config ---
+click==8.1.7
+pyyaml==6.0.1
+python-dotenv>=1.0.0
+
+# --- HTTP & AI ---
+requests==2.31.0
+httpx>=0.26.0
+openai>=2.15.0
+groq>=1.0.0
+
+# --- Data & Validation ---
+pydantic>=2.5.3
+pydantic-settings>=2.1.0
+
+# --- Security Analyzers ---
+bandit>=1.7.6
+
+# --- Reporting & Utils ---
+jinja2>=3.1.3
+python-magic>=0.4.27
+cryptography>=42.0.0
+tqdm>=4.66.0

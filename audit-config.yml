@@ -1,0 +1,52 @@
+scanner:
+  offline_mode: false
+  baseline_file: "baseline.json"
+  max_file_size_kb: 500
+  exclude_patterns:
+    - "*.min.js"
+    - "*.lock"
+    - "*.pyc"
+    - "*.pyo"
+    - "*.whl"
+    - "*.so"
+    - "*.egg-info/*"
+    - "node_modules/*"
+    - "venv/*"
+    - ".venv/*"
+    - "env/*"
+    - ".git/*"
+    - "__pycache__/*"
+    - "dist/*"
+    - "build/*"
+    - "reports/*"
+    - "*.pack"
+    - "site-packages/*"
+
+detectors:
+  bandit_detector: true
+  semgrep_detector: true
+  gitleaks_detector: true
+  secret_detector: true
+  dependency_scanner: true
+  iac_scanner: true
+  cicd_analyzer: true
+  sast_scanner: true
+  slither_detector: false
+  license_scanner: false
+
+ai:
+  enabled: true
+  provider: "google"
+  mode: "external"
+  model: "gemini-2.5-flash"
+  max_findings_per_scan: 15
+  min_severity_for_ai: "HIGH"
+  batch_size: 3
+  sleep_between_batches: 20
+
+reporting:
+  output_dir: "reports"
+
+policy:
+  fail_on_severity: "HIGH"
+  min_severity_for_ai: "HIGH"

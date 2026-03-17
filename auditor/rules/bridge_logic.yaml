@@ -1,0 +1,95 @@
+rules:
+  - id: bridge-reentrancy-vulnerability
+    patterns:
+      - pattern: |
+          function $FUNC(...) {
+            ...
+            $TARGET.call{value: $VALUE}(...);
+            ...
+            $BALANCE = $BALANCE - $VALUE;
+            ...
+          }
+    message: "Potential Reentrancy in bridge: Transfer occurs before balance update. Move balance update before the call."
+    languages: [solidity]
+    severity: ERROR
+
+  - id: missing-access-control-bridge
+    patterns:
+      - pattern: |
+          function $FUNC(...) public {
+            ...
+            $BRIDGE.withdraw(...);
+            ...
+          }
+      - pattern-not: |
+          function $FUNC(...) public onlyOwner { ... }
+      - pattern-not: |
+          function $FUNC(...) public onlyRole(...) { ... }
+    message: "Critical bridge function lacks access control! Anyone might trigger a withdrawal."
+    languages: [solidity]
+    severity: ERROR
+
+  - id: unchecked-low-level-call
+    patterns:
+      - pattern: |
+          $TARGET.call{...}($DATA);
+      - pattern-not-inside: |
+          (bool $SUCCESS, ...) = $TARGET.call{...}($DATA);
+          require($SUCCESS, ...);
+    message: "Critical: Low-level call return value is not checked. If the call fails, the contract will continue execution as if it succeeded."
+    languages: [solidity]
+    severity: ERROR
+
+  - id: delegatecall-to-variable
+    patterns:
+      - pattern: |
+          $TARGET.delegatecall($DATA);
+    message: "DANGEROUS: delegatecall to a variable target can allow an attacker to take over the entire contract state."
+    languages: [solidity]
+    severity: ERROR
+
+  - id: oracle-price-manipulation
+    patterns:
+      - pattern: |
+          $PRICE = $PAIR.getReserves();
+    message: "WARNING: Using getReserves() for price calculation is vulnerable to flash loan attacks. Use a TWAP oracle instead."
+    languages: [solidity]
+    severity: ERROR
+
+  - id: arbitrary-transfer-from
+    patterns:
+      - pattern: |
+          $TOKEN.transferFrom($FROM, $TO, $AMOUNT);
+      - pattern-not: |
+          $TOKEN.transferFrom(msg.sender, $TO, $AMOUNT);
+    message: "CRITICAL: transferFrom with arbitrary 'from' address. If not protected, an attacker can spend other users' tokens."
+    languages: [solidity]
+    severity: ERROR
+
+  - id: arbitrary-call-in-bridge
+    patterns:
+      - pattern: |
+          function execute(address $TARGET, bytes $DATA, ...) {
+            ...
+            $TARGET.call($DATA);
+            ...
+          }
+      - pattern-not: |
+          function execute(address $TARGET, bytes $DATA, ...) {
+            require(isWhitelisted($TARGET), "Not whitelisted");
+            ...
+          }
+    message: "CRITICAL: Arbitrary call to any address found. This allows an attacker to call any contract from the bridge's name!"
+    languages: [solidity]
+    severity: ERROR
+
+  - id: missing-deadline-check
+    patterns:
+      - pattern: |
+          function swap(..., uint256 $AMOUNT) public {
+            ...
+            router.swapExactTokensForTokens($AMOUNT, ...);
+          }
+    message: "MEDIUM: Missing deadline check in swap. Transactions can be held in mempool and executed at an unfavorable price."
+    languages: [solidity]
+    severity: WARNING

@@ -1,0 +1,65 @@
+# ============================================================
+# Sentinel Core — unified .gitignore
+# ============================================================
+# --- Secrets & Environment ---
+.env
+.env.local
+auditor/.env
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# --- Virtual Environments ---
+venv/
+.venv/
+env/
+
+# --- Build & Distribution ---
+dist/
+build/
+*.egg-info/
+*.zip
+*.tar.gz
+*.whl
+
+# --- Reports (генерируются на месте, не хранятся в репо) ---
+reports/
+sentinel_report.html
+sentinel_report.md
+sentinel_report.json
+auditor/reports/
+
+# --- AI run artifacts ---
+reports/ai_runs/
+
+# --- Database ---
+*.db
+*.sqlite3
+
+# --- IDE & OS ---
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# --- Testing & Coverage ---
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- Локальные тестовые папки ---
+ppp/
+contracts/
+
+# --- Backup & legacy файлы ---
+rules_ORG/
+sentinel_ORG/
+setup.py_bak
+setup.py_encrypt
+auditor/auditor/
+
+build_cython.py

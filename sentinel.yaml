@@ -1,0 +1,18 @@
+admin_repo: $SENTINEL_ADMIN_REPO
+
+ignore:
+  - venv/*
+  - .git/*
+  - node_modules/*
+  - sentinel_report.html
+  - reports/*
+
+overrides: []
+
+severity:
+  SEC-001:        BLOCK
+  SUPPLY-001:     BLOCK
+  INFRA-001:      BLOCK
+  INFRA-K8S-001:  WARN
+  CICD-001:       WARN
+  IOT-001:        WARN

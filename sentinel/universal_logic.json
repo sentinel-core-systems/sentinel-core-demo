@@ -1,0 +1,50 @@
+{
+  "universal_semantic_rules": [
+    {
+      "detector_scope": ["gitleaks", "secretdetector", "semgrep"],
+      "rule_id_pattern": ".*secret.*",
+      "risk_category": "SECRETS_POTENTIAL_EXPOSURE",
+      "file_context": "CORE",
+      "adjusted_severity": "CRITICAL",
+      "confidence_level": 0.85,
+      "audit_rationale": "Automated detection suggests potential credential material inside runtime logic. Candidate for direct exposure review.",
+      "compliance_mapping": "ISO 27001 A.9.2.3 / SOC 2 CC6.1"
+    },
+    {
+      "detector_scope": ["gitleaks", "secretdetector", "semgrep"],
+      "risk_category": "SECRETS_TEST_ARTIFACT",
+      "file_context": "TEST",
+      "adjusted_severity": "INFO",
+      "confidence_level": 0.95,
+      "audit_rationale": "Non-production artifact. Patterns detected in test fixtures are classified as mock data placeholders.",
+      "compliance_mapping": "ISO 27001 A.8.2.3 / SOC 2 CC6.6"
+    },
+    {
+      "detector_scope": ["bandit", "semgrep"],
+      "risk_category": "COMMAND_INJECTION_CANDIDATE",
+      "file_context": "CORE",
+      "adjusted_severity": "HIGH",
+      "confidence_level": 0.7,
+      "audit_rationale": "Dynamic command execution pattern identified in production module. May create injection attack surface if input is untrusted.",
+      "compliance_mapping": "ISO 27001 A.14.2.1 / SOC 2 CC8.1"
+    },
+    {
+      "detector_scope": ["slitherdetector", "slither"],
+      "risk_category": "SMART_CONTRACT_EXEC_RISK",
+      "file_context": "CORE",
+      "adjusted_severity": "CRITICAL",
+      "confidence_level": 0.8,
+      "audit_rationale": "Automated analysis indicates high-risk execution patterns (delegatecall/reentrancy). Manual audit recommended to prevent asset loss.",
+      "compliance_mapping": "ISO 27001 A.14.2.1 / SOC 2 CC6.1"
+    },
+    {
+      "detector_scope": ["checkov", "semgrep", "iac_scanner"],
+      "risk_category": "IAC_CONFIGURATION_GUIDANCE",
+      "file_context": "INFRA",
+      "adjusted_severity": "HIGH",
+      "confidence_level": 0.75,
+      "audit_rationale": "Infrastructure-as-Code pattern suggests potential public exposure or unrestricted ingress. Candidate for misconfiguration review.",
+      "compliance_mapping": "ISO 27001 A.13.1.1 / SOC 2 CC6.6"
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "universal_semantic_rules": [
+    {
+      "detector_scope": ["gitleaks", "secretdetector", "semgrep"],
+      "risk_category": "SECRETS_REAL_EXPOSURE",
+      "file_context": "CORE",
+      "logic": "IF path in CORE and rule is secret",
+      "adjusted_severity": "CRITICAL",
+      "audit_rationale": "Audit Conclusion: Confirmed secret patterns inside runtime application logic represent direct credential exposure. Active production material.",
+      "compliance_mapping": "ISO 27001 A.9.2.3 / SOC 2 CC6.1"
+    },
+    {
+      "detector_scope": ["gitleaks", "secretdetector", "semgrep"],
+      "risk_category": "SECRETS_TEST_ARTIFACT",
+      "file_context": "TEST",
+      "logic": "IF path in TEST and rule is secret",
+      "adjusted_severity": "INFO",
+      "audit_rationale": "Audit Conclusion: Mock Data Exposure. Secrets detected exclusively in test fixtures are classified as Non-production artifacts.",
+      "compliance_mapping": "ISO 27001 A.8.2.3 / SOC 2 CC6.6"
+    },
+    {
+      "detector_scope": ["gitleaks", "secretdetector", "semgrep"],
+      "risk_category": "SECRETS_DOCS_EXAMPLE",
+      "file_context": "DOCS",
+      "logic": "IF path in DOCS and rule is secret",
+      "adjusted_severity": "INFO",
+      "audit_rationale": "Audit Conclusion: Hardcoded example credentials in documentation represent illustrative placeholders. Classified as Non-production artifact.",
+      "compliance_mapping": "ISO 27001 A.7.2.2 / SOC 2 CC2.3"
+    },
+    {
+      "detector_scope": ["bandit", "semgrep"],
+      "risk_category": "COMMAND_INJECTION_RUNTIME",
+      "file_context": "CORE",
+      "logic": "IF path in CORE and rule is subprocess/shell",
+      "adjusted_severity": "HIGH",
+      "audit_rationale": "Audit Conclusion: shell=True or equivalent dynamic command execution inside production modules creates injection attack surface.",
+      "compliance_mapping": "ISO 27001 A.14.2.1 / SOC 2 CC8.1"
+    },
+    {
+      "detector_scope": ["bandit", "semgrep"],
+      "risk_category": "COMMAND_EXEC_OPERATIONAL",
+      "file_context": "INFRA",
+      "logic": "IF path in INFRA and rule is subprocess/shell",
+      "adjusted_severity": "LOW",
+      "audit_rationale": "Audit Conclusion: Operational Necessity. Command execution inside CI/CD or packaging scripts is limited to trusted pipeline context.",
+      "compliance_mapping": "ISO 27001 A.12.1.2 / SOC 2 CC7.2"
+    },
+    {
+      "detector_scope": ["bandit", "semgrep"],
+      "risk_category": "EVAL_RUNTIME",
+      "file_context": "CORE",
+      "logic": "IF path in CORE and rule is eval/exec",
+      "adjusted_severity": "CRITICAL",
+      "audit_rationale": "Audit Conclusion: Dynamic code execution (eval/exec) in runtime logic enables remote code execution. Structural design flaw.",
+      "compliance_mapping": "ISO 27001 A.14.2.5 / SOC 2 CC8.1"
+    },
+    {
+      "detector_scope": ["slitherdetector", "slither"],
+      "risk_category": "DELEGATECALL_SMART_CONTRACT",
+      "file_context": "CORE",
+      "logic": "IF path in CORE and rule is smart contract execution",
+      "adjusted_severity": "CRITICAL",
+      "audit_rationale": "Audit Conclusion: Unsafe delegatecall or reentrancy in smart contracts may cause irreversible asset loss. Fundamental execution risk.",
+      "compliance_mapping": "ISO 27001 A.14.2.1 / SOC 2 CC6.1"
+    },
+    {
+      "detector_scope": ["bandit"],
+      "risk_category": "ASSERT_USAGE",
+      "file_context": "CORE",
+      "logic": "IF path in CORE and rule is B101",
+      "adjusted_severity": "MEDIUM",
+      "audit_rationale": "Audit Conclusion: Assertions removed in optimized runtime can disable security validation logic.",
+      "compliance_mapping": "ISO 27001 A.14.2.1 / SOC 2 CC8.1"
+    },
+    {
+      "detector_scope": ["bandit"],
+      "risk_category": "ASSERT_TEST_NOISE",
+      "file_context": "TEST",
+      "logic": "IF path in TEST and rule is B101",
+      "adjusted_severity": "INFO",
+      "audit_rationale": "Audit Conclusion: Noise. Use of 'assert' in test suites is standard practice. Compliant with secure development as test artifacts are not deployed.",
+      "compliance_mapping": "ISO 27001 A.14.2.1"
+    },
+    {
+      "detector_scope": ["checkov", "semgrep", "iac_scanner"],
+      "risk_category": "IAC_PUBLIC_EXPOSURE",
+      "file_context": "INFRA",
+      "logic": "IF path in INFRA and rule is Terraform/IaC",
+      "adjusted_severity": "HIGH",
+      "audit_rationale": "Audit Conclusion: Public exposure of storage or unrestricted ingress represents infrastructure misconfiguration.",
+      "compliance_mapping": "ISO 27001 A.13.1.1 / SOC 2 CC6.6"
+    },
+    {
+      "detector_scope": ["checkov", "semgrep", "iac_scanner"],
+      "risk_category": "IAC_TEST_FIXTURE",
+      "file_context": "TEST",
+      "logic": "IF path in TEST and rule is Terraform/IaC",
+      "adjusted_severity": "INFO",
+      "audit_rationale": "Audit Conclusion: Vulnerable-by-Design Artifact. Infrastructure-as-Code files exist solely to test scanner efficacy.",
+      "compliance_mapping": "ISO 27001 A.14.2.8"
+    },
+    {
+      "detector_scope": ["bandit", "semgrep"],
+      "risk_category": "TMP_PATH_HARDCODED",
+      "file_context": "CORE",
+      "logic": "IF path in CORE and rule is B108",
+      "adjusted_severity": "LOW",
+      "audit_rationale": "Audit Conclusion: Static temporary file usage represents limited local privilege escalation vector. Hygiene improvement required.",
+      "compliance_mapping": "ISO 27001 A.12.6.1 / SOC 2 CC7.1"
+    },
+    {
+      "detector_scope": ["gitleaks", "secretdetector", "semgrep"],
+      "risk_category": "CI_SECRET_LEAK",
+      "file_context": "INFRA",
+      "logic": "IF path in INFRA (github/compose) and rule is secret",
+      "adjusted_severity": "CRITICAL",
+      "audit_rationale": "Audit Conclusion: Secrets embedded in CI configuration expose supply chain pipeline. Enables repository compromise.",
+      "compliance_mapping": "ISO 27001 A.15.1.1 / SOC 2 CC6.1"
+    }
+  ]
+}
